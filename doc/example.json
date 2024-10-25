@@ -2,7 +2,7 @@
   "isFull": false,
   "list": [
     {
-      "title": "这里填写示例标题",
+      "title": "ButtonGroup",
       "description": "这里填写示例说明",
       "code": "./base.js",
       "scope": [
@@ -10,6 +10,61 @@
           "name": "_ButtonGroup",
           "packageName": "@kne/current-lib_button-group",
           "importStatement": "import * as _ButtonGroup from \"@kne/button-group\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        }
+      ]
+    },
+    {
+      "title": "LoadingButton",
+      "description": "这里填写示例说明",
+      "code": "./loading-button.js",
+      "scope": [
+        {
+          "name": "_ButtonGroup",
+          "packageName": "@kne/current-lib_button-group",
+          "importStatement": "import * as _ButtonGroup from \"@kne/button-group\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        }
+      ]
+    },
+    {
+      "title": "ConfirmButton",
+      "description": "这里填写示例说明",
+      "code": "./confirm-button.js",
+      "scope": [
+        {
+          "name": "_ButtonGroup",
+          "packageName": "@kne/current-lib_button-group",
+          "importStatement": "import * as _ButtonGroup from \"@kne/button-group\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        }
+      ]
+    },
+    {
+      "title": "FetchButton",
+      "description": "这里填写示例说明",
+      "code": "./fetch-button.js",
+      "scope": [
+        {
+          "name": "_ButtonGroup",
+          "packageName": "@kne/current-lib_button-group",
+          "importStatement": "import * as _ButtonGroup from \"@kne/button-group\""
+        },
+        {
+          "packageName": "@kne/current-lib_button-group/dist/index.css"
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
         }
       ]
     }
