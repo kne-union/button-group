@@ -129,29 +129,17 @@ const ConfirmButton = p => {
 };
 
 export const ConfirmLink = ({ children, ...p }) => {
-  return (
-    <ConfirmButton {...p}>
-      <Typography.Link>{children}</Typography.Link>
-    </ConfirmButton>
-  );
+  return <ConfirmButton {...p}>{props => <Typography.Link {...props}>{children}</Typography.Link>}</ConfirmButton>;
 };
 
 export const ConfirmText = ({ children, ...p }) => {
-  return (
-    <ConfirmButton {...p}>
-      <Typography.Text>{children}</Typography.Text>
-    </ConfirmButton>
-  );
+  return <ConfirmButton {...p}>{props => <Typography.Text {...props}>{children}</Typography.Text>}</ConfirmButton>;
 };
 
 export const withConfirm = WrappedComponent => {
   console.warn('后续版本可能删除该api，请不要使用');
   return ({ children, ...p }) => {
-    return (
-      <ConfirmButton {...p}>
-        <WrappedComponent>{children}</WrappedComponent>
-      </ConfirmButton>
-    );
+    return <ConfirmButton {...p}>{props => <WrappedComponent {...props}>{children}</WrappedComponent>}</ConfirmButton>;
   };
 };
 
