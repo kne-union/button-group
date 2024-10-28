@@ -61,11 +61,6 @@ const ConfirmButton = p => {
         onClick: handlerConfirm
       });
     }
-    if (isValidElement(children)) {
-      const Component = children.type;
-
-      return <Component {...Object.assign({}, props, children.props)} onClick={handlerConfirm} />;
-    }
     return (
       <Button
         {...props}
