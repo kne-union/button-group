@@ -111,9 +111,7 @@ const ConfirmButton = p => {
   }
   return (
     <Popconfirm
-      overlayClassName={classnames(style['overlay'], {
-        [style['is-danger']]: isDelete
-      })}
+      overlayClassName={classnames(style['overlay'])}
       okButtonProps={{
         danger: isDelete
       }}
