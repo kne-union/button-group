@@ -17,7 +17,14 @@ const ConfirmButton = p => {
     },
     p.locale
   );
-  const { title, message, isDelete, showCancel, cancelText, onCancel, isModal, okText, placement, children, onClick, getContainer, renderModal, ...props } = Object.assign({}, p, { locale });
+  const { title, message, isDelete, showCancel, cancelText, onCancel, isModal, okText, placement, children, onClick, getContainer, renderModal, ...props } = Object.assign(
+    {},
+    {
+      isDelete: true
+    },
+    p,
+    { locale }
+  );
 
   const [open, setOpen] = useState(false);
   const { isLoading, callback } = useLoading(onClick);
