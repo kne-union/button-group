@@ -1,6 +1,6 @@
 import React, { startTransition, useState } from 'react';
 import useResize from '@kne/use-resize';
-import { Button, Dropdown, Space } from 'antd';
+import { Button, Dropdown, Space, Tooltip } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import useRefCallback from '@kne/use-ref-callback';
 import classnames from 'classnames';
@@ -76,10 +76,10 @@ const ButtonGroup = p => {
         isDropdown
       });
     }
-    const { className, confirm, buttonComponent, ...props } = renderItem;
+    const { className, confirm, buttonComponent, tooltipProps, ...props } = renderItem;
     const isConfirm = confirm || props.message;
     const CurrentButton = isConfirm ? ConfirmButton : buttonComponent || LoadingButton;
-    return (
+    const currentButton = (
       <CurrentButton
         danger={isConfirm && props.isDelete !== false}
         {...Object.assign(
@@ -95,6 +95,7 @@ const ButtonGroup = p => {
         className={classnames('button-group-item', style['btn-item'], className)}
       />
     );
+    return tooltipProps ? <Tooltip {...tooltipProps}>{currentButton}</Tooltip> : currentButton;
   };
 
   const SpaceComponent = compact ? Space.Compact : Space;

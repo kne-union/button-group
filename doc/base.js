@@ -10,9 +10,15 @@ const Example = () => {
         list={[{
           type: 'primary', children: '操作1'
         }, {
-          children: '操作2'
+          children: '操作2',
+          tooltipProps: {
+            title: '操作2'
+          }
         }, {
-          children: '操作3', disabled: true
+          children: '操作3', disabled: true,
+          tooltipProps: {
+            title: '操作3==='
+          }
         }, {
           children: '操作3', message: '确定要执行操作吗？', disabled: true
         }, {
