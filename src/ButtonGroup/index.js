@@ -78,7 +78,7 @@ const ButtonGroup = p => {
     }
     const { className, confirm, buttonComponent, tooltipProps, ...props } = renderItem;
     const isConfirm = confirm || props.message;
-    const CurrentButton = isConfirm ? ConfirmButton : buttonComponent || LoadingButton;
+    const CurrentButton = buttonComponent || (isConfirm ? ConfirmButton : LoadingButton);
     const currentButton = (
       <CurrentButton
         danger={isConfirm && props.isDelete !== false}
