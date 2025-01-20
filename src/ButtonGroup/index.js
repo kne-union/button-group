@@ -10,7 +10,7 @@ import pick from 'lodash/pick';
 import areaWidthComputed from './areaWidthComputed';
 import style from './style.module.scss';
 import { createWithIntlProvider, useIntl } from '@kne/react-intl';
-import zhCn from '../locale/zh-cn';
+import zhCn from '../locale/zh-CN';
 
 const ButtonGroup = createWithIntlProvider(
   'zh-CN',
