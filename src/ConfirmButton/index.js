@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import useRefCallback from '@kne/use-ref-callback';
 import style from './style.module.scss';
 import { createWithIntlProvider, useIntl } from '@kne/react-intl';
-import zhCn from '../locale/zh-cn';
+import zhCn from '../locale/zh-CN';
 
 const ConfirmButton = createWithIntlProvider(
   'zh-CN',
