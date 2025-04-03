@@ -98,7 +98,7 @@ const ButtonGroup = createWithIntlProvider(
             : {}
         )}
         key={index}
-        className={classnames('button-group-item', style['btn-item'], className)}
+        className={classnames('button-group-item', className)}
       />
     );
     return tooltipProps ? <Tooltip {...tooltipProps}>{currentButton}</Tooltip> : currentButton;
