@@ -23,6 +23,8 @@ const ButtonGroup = createWithIntlProvider(
     more,
     compact,
     showLength: showLengthProps,
+    getPopupContainer,
+    trigger,
     ...props
   } = Object.assign(
     {},
@@ -121,6 +123,8 @@ const ButtonGroup = createWithIntlProvider(
         {list.slice(0, showLength).map((item, index) => renderButton(item, index, false))}
         {otherList.length > 0 && (
           <Dropdown
+            getPopupContainer={getPopupContainer}
+            trigger={trigger}
             overlayClassName={style['menu-list']}
             menu={{
               items: otherList.map((item, index) => {
