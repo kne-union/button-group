@@ -78,11 +78,13 @@ const ButtonGroup = createWithIntlProvider(
 
   const renderButton = (renderItem, index, isDropdown) => {
     if (typeof renderItem === 'function') {
-      return renderItem({
-        key: index,
-        className: classnames('button-group-item', style['btn-item']),
-        isDropdown
-      });
+      return renderItem(
+        {
+          key: index,
+          className: classnames('button-group-item', style['btn-item'])
+        },
+        { isDropdown }
+      );
     }
     const { className, confirm, buttonComponent, tooltipProps, ...props } = renderItem;
     const isConfirm = confirm || props.message;
@@ -125,7 +127,7 @@ const ButtonGroup = createWithIntlProvider(
           <Dropdown
             getPopupContainer={getPopupContainer}
             trigger={trigger}
-            overlayClassName={style['menu-list']}
+            rootClassName={style['menu-list']}
             menu={{
               items: otherList.map((item, index) => {
                 return {
@@ -133,8 +135,7 @@ const ButtonGroup = createWithIntlProvider(
                   label: renderButton(item, index, true)
                 };
               })
-            }}
-          >
+            }}>
             {more}
           </Dropdown>
         )}
