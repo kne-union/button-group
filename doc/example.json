@@ -67,6 +67,25 @@
           "packageName": "antd"
         }
       ]
+    },
+    {
+      "title": "ButtonFooter",
+      "description": "这里填写示例说明",
+      "code": "./button-footer.js",
+      "scope": [
+        {
+          "name": "_ButtonGroup",
+          "packageName": "@kne/current-lib_button-group",
+          "importStatement": "import * as _ButtonGroup from \"@kne/button-group\""
+        },
+        {
+          "packageName": "@kne/current-lib_button-group/dist/index.css"
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        }
+      ]
     }
   ]
 }
