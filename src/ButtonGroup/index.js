@@ -26,18 +26,14 @@ const ButtonGroup = createWithIntlProvider(
     getPopupContainer,
     trigger,
     ...props
-  } = Object.assign(
-    {},
-    {
-      more: (
-        <Button>
-          {formatMessage({ id: 'more' })}
-          <DownOutlined />
-        </Button>
-      )
-    },
-    p
-  );
+  } = Object.assign({}, p, {
+    more: p?.more || (
+      <Button>
+        {formatMessage({ id: 'more' })}
+        <DownOutlined />
+      </Button>
+    )
+  });
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
   const [showLengthState, setShowLength] = useState(list.length && 1);
