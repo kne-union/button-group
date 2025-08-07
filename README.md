@@ -96,6 +96,8 @@ const Example = () => {
         list={[{
           type: 'primary', children: '操作1'
         }, {
+          type: 'primary', children: '操作1-1', hidden: true
+        }, {
           children: '操作2',
           tooltipProps: {
             title: '操作2'
@@ -106,9 +108,9 @@ const Example = () => {
             title: '操作3==='
           }
         }, {
-          children: '操作3', message: '确定要执行操作吗？', disabled: true
+          children: '操作4', message: '确定要执行操作吗？', disabled: true
         }, {
-          children: '操作3', message: '确定要执行操作吗？'
+          children: '操作5', message: '确定要执行操作吗？'
         }]}
       />
     </div>
@@ -146,9 +148,9 @@ const CompactExample = () => {
         }, {
           children: '操作2'
         }, {
-          children: '操作3'
+          children: '操作3', hidden: true
         }, {
-          children: '操作3', message: '确定要执行操作吗？'
+          children: '操作4', message: '确定要执行操作吗？'
         }]}
       />
     </div>
