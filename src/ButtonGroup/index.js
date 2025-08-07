@@ -1,4 +1,4 @@
-import React, { startTransition, useState } from 'react';
+import React, { startTransition, useMemo, useState } from 'react';
 import useResize from '@kne/use-resize';
 import { Button, Dropdown, Space, Tooltip } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -19,7 +19,7 @@ const ButtonGroup = createWithIntlProvider(
 )(p => {
   const { formatMessage } = useIntl();
   const {
-    list,
+    list: originalList,
     more,
     compact,
     showLength: showLengthProps,
@@ -38,6 +38,7 @@ const ButtonGroup = createWithIntlProvider(
     },
     p
   );
+  const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
   const [showLengthState, setShowLength] = useState(list.length && 1);
   const showLength = Number.isInteger(showLengthProps) ? showLengthProps : showLengthState;
@@ -135,7 +136,8 @@ const ButtonGroup = createWithIntlProvider(
                   label: renderButton(item, index, true)
                 };
               })
-            }}>
+            }}
+          >
             {more}
           </Dropdown>
         )}
