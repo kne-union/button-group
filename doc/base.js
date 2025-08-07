@@ -26,6 +26,7 @@ const Example = () => {
         }, {
           children: '操作5', message: '确定要执行操作吗？'
         }]}
+        more="..."
       />
     </div>
     <Flex gap={8}>
