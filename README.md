@@ -221,7 +221,7 @@ const FunctionProps = () => {
   return (
     <Flex gap={8}>
       <div style={{ width: `${width}px` }}>
-        <ButtonGroup
+        <ButtonGroup itemClassName="btn-no-padding"
           moreType="link"
           list={[
             props => {
