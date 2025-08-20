@@ -19,7 +19,7 @@ const ButtonGroup = createWithIntlProvider(
   'button-group'
 )(p => {
   const { formatMessage } = useIntl();
-  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, ...props } = Object.assign({}, p);
+  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, itemClassName, ...props } = Object.assign({}, p);
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
   const [showLengthState, setShowLength] = useState(list.length && 1);
@@ -64,7 +64,7 @@ const ButtonGroup = createWithIntlProvider(
       return renderItem(
         {
           key: index,
-          className: classnames('button-group-item', style['btn-item'])
+          className: classnames('button-group-item', style['btn-item'], itemClassName)
         },
         { isDropdown }
       );
@@ -82,10 +82,11 @@ const ButtonGroup = createWithIntlProvider(
             ? {
                 isModal: true
               }
-            : {}
+            : {},
+          isDropdown ? { type: 'default' } : {}
         )}
         key={index}
-        className={classnames('button-group-item', className)}
+        className={classnames('button-group-item', className, itemClassName)}
       />
     );
     return tooltipProps ? <Tooltip {...tooltipProps}>{currentButton}</Tooltip> : currentButton;
@@ -94,7 +95,7 @@ const ButtonGroup = createWithIntlProvider(
   const moreButton =
     more ||
     (moreType === 'link' ? (
-      <Button type="link">
+      <Button type="link" className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
         <EllipsisOutlined style={{ fontSize: '16px' }} />
       </Button>
     ) : (
@@ -114,7 +115,7 @@ const ButtonGroup = createWithIntlProvider(
           {moreButton}
         </div>
         <div className={style['hidden-inner']} ref={targetRef}>
-          <SpaceComponent {...spaceProps}>{list.map(renderButton)}</SpaceComponent>
+          <SpaceComponent {...spaceProps}>{list.map((item, index) => renderButton(item, index, false))}</SpaceComponent>
         </div>
       </div>
       <SpaceComponent {...spaceProps}>
@@ -132,7 +133,6 @@ const ButtonGroup = createWithIntlProvider(
                 };
               })
             }}
-
           >
             {moreButton}
           </Dropdown>
