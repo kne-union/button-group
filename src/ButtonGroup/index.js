@@ -1,4 +1,4 @@
-import React, { startTransition, useMemo, useState } from 'react';
+import React, { startTransition, useMemo, useState, Fragment } from 'react';
 import { EllipsisOutlined } from '@ant-design/icons';
 import useResize from '@kne/use-resize';
 import { Button, Dropdown, Space, Tooltip } from 'antd';
@@ -115,11 +115,17 @@ const ButtonGroup = createWithIntlProvider(
           {moreButton}
         </div>
         <div className={style['hidden-inner']} ref={targetRef}>
-          <SpaceComponent {...spaceProps}>{list.map((item, index) => renderButton(item, index, false))}</SpaceComponent>
+          <SpaceComponent {...spaceProps}>
+            {list.map((item, index) => (
+              <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
+            ))}
+          </SpaceComponent>
         </div>
       </div>
       <SpaceComponent {...spaceProps}>
-        {list.slice(0, showLength).map((item, index) => renderButton(item, index, false))}
+        {list.slice(0, showLength).map((item, index) => (
+          <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
+        ))}
         {otherList.length > 0 && (
           <Dropdown
             getPopupContainer={getPopupContainer}
