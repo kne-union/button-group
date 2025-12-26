@@ -1,8 +1,7 @@
 @media (max-width: 768px) {
   .button-footer {
-    height: var(--footer-height);
+    visibility: hidden;
   }
-
   .inner {
     position: fixed;
     bottom: 0;
