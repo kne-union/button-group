@@ -1,6 +1,6 @@
 {
   "name": "@kne/button-group",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "实现了一个按钮组,loading按钮,确认按钮和加载按钮.",
   "syntax": {
     "esmodules": true
