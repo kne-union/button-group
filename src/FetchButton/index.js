@@ -20,14 +20,16 @@ const FetchButton = ({ api, onClick, params, onSuccess, onError, beforeFetch, af
         }
       }
 
-      const { output: data, errorStack } = await refresh(params || {});
+      const result = await refresh(params || {});
+      const output = result?.output || result;
+      const errorStack = result?.errorStack;
 
       // 执行 afterFetch 钩子
       if (afterFetch) {
-        afterFetch({ data, errorStack });
+        afterFetch({ data: output, errorStack });
       }
 
-      if (Object.values(errorStack).length > 0) {
+      if (errorStack && Object.keys(errorStack).length > 0) {
         if (onError) {
           onError(errorStack);
         }
@@ -35,10 +37,10 @@ const FetchButton = ({ api, onClick, params, onSuccess, onError, beforeFetch, af
       }
 
       if (onSuccess) {
-        onSuccess({ data });
+        onSuccess({ data: output });
       }
       if (onClick) {
-        onClick({ data });
+        onClick({ data: output });
       }
     } catch (error) {
       if (onError) {

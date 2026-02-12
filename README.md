@@ -1384,6 +1384,7 @@ const RefreshExample = () => {
   const [lastRefresh, setLastRefresh] = useState(null);
 
   const handleRefresh = ({ data: newData }) => {
+    console.log(newData);
     setData(newData);
     setLastRefresh(new Date().toLocaleTimeString());
     message.success('数据已更新');
@@ -1402,14 +1403,12 @@ const RefreshExample = () => {
               return new Promise((resolve) => {
                 setTimeout(() => {
                   resolve({
-                    data: {
-                      users: [
-                        { id: 1, name: '用户A', status: '在线' },
-                        { id: 2, name: '用户B', status: '离线' },
-                        { id: 3, name: '用户C', status: '在线' }
-                      ],
-                      total: 3
-                    }
+                    users: [
+                      { id: 1, name: '用户A', status: '在线' },
+                      { id: 2, name: '用户B', status: '离线' },
+                      { id: 3, name: '用户C', status: '在线' }
+                    ],
+                    total: 3
                   });
                 }, 1000);
               });
@@ -1421,7 +1420,7 @@ const RefreshExample = () => {
         </FetchButton>
         {data && (
           <Alert
-            message={&#96;当前数据：${data.users.length} 个用户在线&#96;}
+            message={&#96;当前数据：${data.users?.length} 个用户在线&#96;}
             type="info"
           />
         )}
