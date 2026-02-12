@@ -51,6 +51,14 @@
         color: var(--primary-color);
         background: var(--primary-color-1) !important;
       }
+
+      &.ant-btn-dangerous:not(:disabled) {
+        color: #ff4d4f;
+
+        &:hover {
+          background: #fff1f0 !important;
+        }
+      }
     }
   }
 }

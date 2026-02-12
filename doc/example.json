@@ -2,9 +2,9 @@
   "isFull": false,
   "list": [
     {
-      "title": "ButtonGroup",
-      "description": "这里填写示例说明",
-      "code": "./base.js",
+      "title": "ButtonGroup 基础用法",
+      "description": "ButtonGroup 能够根据容器宽度自动调整显示的按钮数量，并将多余的按钮放入下拉菜单中。适用于操作栏、工具栏等场景。",
+      "code": "./button-group.js",
       "scope": [
         {
           "name": "_ButtonGroup",
@@ -18,8 +18,8 @@
       ]
     },
     {
-      "title": "LoadingButton",
-      "description": "这里填写示例说明",
+      "title": "LoadingButton 加载按钮",
+      "description": "LoadingButton 封装了加载状态，简化异步操作的处理。点击按钮时自动显示加载状态，避免重复提交。",
       "code": "./loading-button.js",
       "scope": [
         {
@@ -34,8 +34,8 @@
       ]
     },
     {
-      "title": "ConfirmButton",
-      "description": "这里填写示例说明",
+      "title": "ConfirmButton 确认按钮",
+      "description": "ConfirmButton 带有确认功能，支持弹窗确认和模态框确认两种模式。适用于删除、提交等重要操作。",
       "code": "./confirm-button.js",
       "scope": [
         {
@@ -50,8 +50,8 @@
       ]
     },
     {
-      "title": "FetchButton",
-      "description": "这里填写示例说明",
+      "title": "FetchButton 请求按钮",
+      "description": "FetchButton 集成了数据请求功能，自动管理加载状态和请求流程。适用于按钮触发 API 请求的场景。",
       "code": "./fetch-button.js",
       "scope": [
         {
@@ -69,8 +69,8 @@
       ]
     },
     {
-      "title": "ButtonFooter",
-      "description": "这里填写示例说明",
+      "title": "ButtonFooter 底部按钮区",
+      "description": "ButtonFooter 是页面底部按钮区域组件，在小屏幕下自动将内容渲染到 body，方便表单页面的操作按钮布局。",
       "code": "./button-footer.js",
       "scope": [
         {
