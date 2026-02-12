@@ -14,7 +14,7 @@ const ConfirmButton = createWithIntlProvider(
   'button-group'
 )(p => {
   const { formatMessage } = useIntl();
-  const { title, message, isDelete, showCancel, cancelText, onCancel, isModal, okText, placement, children, onClick, getContainer, renderModal, ...props } = Object.assign({}, { isDelete: true }, p);
+  const { title, message, isDelete, showCancel, cancelText, onCancel, isModal, okText, placement, children, onClick, getContainer, renderModal, ...props } = Object.assign({}, p);
 
   const [open, setOpen] = useState(false);
   const { isLoading, callback } = useLoading(onClick);
@@ -55,7 +55,8 @@ const ConfirmButton = createWithIntlProvider(
     if (typeof children === 'function') {
       return children({
         ...props,
-        onClick: handlerConfirm
+        onClick: handlerConfirm,
+        ...(isDelete && { style: { color: '#ff4d4f', ...props.style } })
       });
     }
     return (

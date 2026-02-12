@@ -1,6 +1,6 @@
 {
   "name": "@kne/button-group",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "实现了一个按钮组,loading按钮,确认按钮和加载按钮.",
   "syntax": {
     "esmodules": true
@@ -90,7 +90,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@kne/react-fetch": "^1.5.4",
-    "@kne/react-intl": "^0.1.2",
+    "@kne/react-intl": "^0.1.12",
     "@kne/use-ref-callback": "^0.1.2",
     "@kne/use-resize": "^0.1.1",
     "classnames": "^2.5.1",
