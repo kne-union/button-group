@@ -69,12 +69,14 @@ const ButtonGroup = createWithIntlProvider(
         { isDropdown }
       );
     }
-    const { className, confirm, buttonComponent, tooltipProps, hidden, isDelete, isModal, message, ...props } = renderItem;
-    const isConfirm = confirm || message;
+    const { className, confirm, buttonComponent, tooltipProps, hidden, isDelete, isModal, ...props } = renderItem;
+
+    const isConfirm = confirm || !!props.message || isDelete;
     const CurrentButton = buttonComponent || (isConfirm ? ConfirmButton : LoadingButton);
     const currentButton = (
       <CurrentButton
         danger={isConfirm && isDelete !== false}
+        isDelete={!(isConfirm && isDelete === false)}
         {...Object.assign(
           {},
           props,
@@ -83,8 +85,7 @@ const ButtonGroup = createWithIntlProvider(
                 isModal: true
               }
             : {},
-          isDropdown ? { type: 'default' } : {},
-          isConfirm && isDelete !== undefined ? { isDelete } : {}
+          isDropdown ? { type: 'default' } : {}
         )}
         key={index}
         className={classnames('button-group-item', className, itemClassName)}
