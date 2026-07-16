@@ -1,4 +1,4 @@
-import React, { useState, isValidElement } from 'react';
+import React, { useState } from 'react';
 import { Popconfirm, Modal, Button, Flex, Typography } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { useLoading } from '../LoadingButton';
@@ -79,7 +79,7 @@ const ConfirmButton = createWithIntlProvider(
         setOpen(false);
         onCancel && onCancel();
       },
-      wrapClassName: style['modal'],
+      classNames: { wrapper: style['modal'] },
       okText: okText ? okText : isDelete ? formatMessage({ id: 'delete' }) : formatMessage({ id: 'confirm' }),
       cancelText: cancelText || formatMessage({ id: 'cancel' }),
       onOk: e => {
@@ -102,7 +102,7 @@ const ConfirmButton = createWithIntlProvider(
   }
   return (
     <Popconfirm
-      overlayClassName={classnames(style['overlay'])}
+      classNames={{ root: classnames(style['overlay']) }}
       okButtonProps={{
         danger: isDelete
       }}
@@ -133,7 +133,6 @@ export const ConfirmText = ({ children, ...p }) => {
 };
 
 export const withConfirm = WrappedComponent => {
-  console.warn('后续版本可能删除该api，请不要使用');
   return ({ children, ...p }) => {
     return <ConfirmButton {...p}>{props => <WrappedComponent {...props}>{children}</WrappedComponent>}</ConfirmButton>;
   };
