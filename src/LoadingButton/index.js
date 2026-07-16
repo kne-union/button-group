@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Button } from 'antd';
 import useRefCallback from '@kne/use-ref-callback';
 
@@ -23,13 +23,15 @@ export const useLoading = callback => {
   };
 };
 
-const LoadingButton = ({ onClick, children, loading, ...props }) => {
+const LoadingButton = forwardRef(({ onClick, children, loading, ...props }, ref) => {
   const { isLoading, callback } = useLoading(onClick);
   return (
-    <Button {...props} loading={loading || isLoading} onClick={callback}>
+    <Button ref={ref} {...props} loading={loading || isLoading} onClick={callback}>
       {typeof children === 'function' ? children(loading || isLoading) : children}
     </Button>
   );
-};
+});
+
+LoadingButton.displayName = 'LoadingButton';
 
 export default LoadingButton;

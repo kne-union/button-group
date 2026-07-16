@@ -77,14 +77,18 @@ const ButtonGroup = createWithIntlProvider(
     const CurrentButton = buttonComponent || (isConfirm ? ConfirmButton : LoadingButton);
     const currentButton = (
       <CurrentButton
-        danger={isConfirm && isDelete !== false}
-        isDelete={!(isConfirm && isDelete === false)}
         {...Object.assign(
           {},
           props,
-          isConfirm && (isModal || isDropdown)
+          isConfirm
             ? {
-                isModal: true
+                danger: isDelete !== false,
+                isDelete: isDelete !== false,
+                ...(isModal || isDropdown
+                  ? {
+                      isModal: true
+                    }
+                  : {})
               }
             : {},
           isDropdown ? { type: 'default' } : {}

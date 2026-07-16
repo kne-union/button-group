@@ -3,14 +3,22 @@
 }
 
 .inner-mobile {
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 10;
   background: #ffffff;
   padding: 12px 12px 22px 12px;
   display: flex;
   gap: 10px;
   justify-content: center;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+
+  &:global(.kne-is-boundary) {
+    position: absolute;
+  }
+
+  &:global(.kne-is-viewport) {
+    position: fixed;
+  }
 }

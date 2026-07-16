@@ -70,7 +70,8 @@
     },
     {
       "title": "ButtonFooter 底部按钮区",
-      "description": "ButtonFooter 是页面底部按钮区域组件，在小屏幕下自动将内容渲染到 body，方便表单页面的操作按钮布局。",
+      "description": "ButtonFooter 是页面底部按钮区域组件。请切换到手机模式预览：移动端会将操作栏固定到可视区域底部。",
+      "isFull": true,
       "code": "./button-footer.js",
       "scope": [
         {
