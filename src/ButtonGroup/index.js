@@ -1,4 +1,4 @@
-import React, { startTransition, useMemo, useState, Fragment } from 'react';
+import React, { startTransition, useMemo, useState, Fragment, useEffect } from 'react';
 import { EllipsisOutlined } from '@ant-design/icons';
 import useResize from '@kne/use-resize';
 import { Button, Dropdown, Space, Tooltip } from 'antd';
@@ -22,26 +22,23 @@ const ButtonGroup = createWithIntlProvider(
   const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, itemClassName, ...props } = Object.assign({}, p);
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
-  const [showLengthState, setShowLength] = useState(list.length && 1);
+  const [showLengthState, setShowLength] = useState(list.length);
   const showLength = Number.isInteger(showLengthProps) ? showLengthProps : showLengthState;
   const computedLength = useRefCallback(() => {
     const el = targetRef.current,
       moreEl = moreRef.current,
       widthEl = ref.current;
-    if (!el) {
+    if (!el || !widthEl) {
       return;
     }
 
     const buttonEls = el.querySelectorAll('.button-group-item');
-    if (!buttonEls) {
-      return;
-    }
     if (buttonEls.length === 0) {
       return;
     }
 
-    const amountWidth = widthEl.clientWidth,
-      moreBtnWidth = moreEl.clientWidth,
+    const amountWidth = Math.floor(widthEl.clientWidth),
+      moreBtnWidth = moreEl?.clientWidth || 0,
       buttonWidthList = [].map.call(buttonEls, el => el.offsetWidth);
     const targetLength = areaWidthComputed({
       amountWidth,
@@ -51,13 +48,18 @@ const ButtonGroup = createWithIntlProvider(
       compact
     });
     startTransition(() => {
-      setShowLength(targetLength);
+      setShowLength(prev => (prev === targetLength ? prev : targetLength));
     });
   });
   const ref = useResize(computedLength);
   const targetRef = useResize(computedLength);
   const moreRef = useResize(computedLength);
   const otherList = list.slice(showLength);
+
+  useEffect(() => {
+    setShowLength(list.length);
+    computedLength();
+  }, [list, computedLength]);
 
   const renderButton = (renderItem, index, isDropdown) => {
     if (typeof renderItem === 'function') {
@@ -75,14 +77,18 @@ const ButtonGroup = createWithIntlProvider(
     const CurrentButton = buttonComponent || (isConfirm ? ConfirmButton : LoadingButton);
     const currentButton = (
       <CurrentButton
-        danger={isConfirm && isDelete !== false}
-        isDelete={!(isConfirm && isDelete === false)}
         {...Object.assign(
           {},
           props,
-          isConfirm && (isModal || isDropdown)
+          isConfirm
             ? {
-                isModal: true
+                danger: isDelete !== false,
+                isDelete: isDelete !== false,
+                ...(isModal || isDropdown
+                  ? {
+                      isModal: true
+                    }
+                  : {})
               }
             : {},
           isDropdown ? { type: 'default' } : {}
@@ -94,7 +100,7 @@ const ButtonGroup = createWithIntlProvider(
     return tooltipProps ? <Tooltip {...tooltipProps}>{currentButton}</Tooltip> : currentButton;
   };
 
-  const moreButton =
+  const renderMoreButton = () =>
     more ||
     (moreType === 'link' ? (
       <Button type="link" className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
@@ -110,11 +116,11 @@ const ButtonGroup = createWithIntlProvider(
   const SpaceComponent = compact ? Space.Compact : Space;
 
   return (
-    <>
+    <div className={style['button-group']}>
       <div className={style['width-container']} ref={ref} />
       <div className={style['hidden-container']}>
         <div className={style['hidden-inner']} ref={moreRef}>
-          {moreButton}
+          {renderMoreButton()}
         </div>
         <div className={style['hidden-inner']} ref={targetRef}>
           <SpaceComponent {...spaceProps}>
@@ -142,11 +148,11 @@ const ButtonGroup = createWithIntlProvider(
               })
             }}
           >
-            {moreButton}
+            {renderMoreButton()}
           </Dropdown>
         )}
       </SpaceComponent>
-    </>
+    </div>
   );
 });
 
