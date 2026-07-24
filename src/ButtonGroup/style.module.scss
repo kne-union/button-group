@@ -1,11 +1,21 @@
 .button-group {
   width: 100%;
   min-width: 0;
+
+  &:not(.is-ready) {
+    .visible-content {
+      visibility: hidden;
+    }
+  }
 }
 
 .width-container {
   width: 100%;
   pointer-events: none;
+}
+
+.visible-content {
+  min-width: 0;
 }
 
 .hidden-container {
