@@ -1,4 +1,4 @@
-import React, { startTransition, useMemo, useState, Fragment, useEffect } from 'react';
+import React, { useMemo, useState, Fragment, useLayoutEffect } from 'react';
 import { EllipsisOutlined } from '@ant-design/icons';
 import useResize from '@kne/use-resize';
 import { Button, Dropdown, Space, Tooltip } from 'antd';
@@ -22,8 +22,11 @@ const ButtonGroup = createWithIntlProvider(
   const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, itemClassName, ...props } = Object.assign({}, p);
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
-  const [showLengthState, setShowLength] = useState(list.length);
-  const showLength = Number.isInteger(showLengthProps) ? showLengthProps : showLengthState;
+  const isControlled = Number.isInteger(showLengthProps);
+  // 未测量前不展示全部按钮，避免表格行 hover 时出现「先全展开再收进更多」的闪动
+  const [showLengthState, setShowLength] = useState(0);
+  const [ready, setReady] = useState(isControlled);
+  const showLength = isControlled ? showLengthProps : showLengthState;
   const computedLength = useRefCallback(() => {
     const el = targetRef.current,
       moreEl = moreRef.current,
@@ -47,19 +50,25 @@ const ButtonGroup = createWithIntlProvider(
       spaceProps,
       compact
     });
-    startTransition(() => {
-      setShowLength(prev => (prev === targetLength ? prev : targetLength));
-    });
+    setShowLength(prev => (prev === targetLength ? prev : targetLength));
+    setReady(true);
   });
   const ref = useResize(computedLength);
   const targetRef = useResize(computedLength);
   const moreRef = useResize(computedLength);
   const otherList = list.slice(showLength);
 
-  useEffect(() => {
-    setShowLength(list.length);
+  useLayoutEffect(() => {
+    if (isControlled) {
+      return;
+    }
+    if (list.length === 0) {
+      setShowLength(0);
+      setReady(true);
+      return;
+    }
     computedLength();
-  }, [list, computedLength]);
+  }, [list, computedLength, isControlled]);
 
   const renderButton = (renderItem, index, isDropdown) => {
     if (typeof renderItem === 'function') {
@@ -116,7 +125,7 @@ const ButtonGroup = createWithIntlProvider(
   const SpaceComponent = compact ? Space.Compact : Space;
 
   return (
-    <div className={style['button-group']}>
+    <div className={classnames(style['button-group'], { [style['is-ready']]: ready })}>
       <div className={style['width-container']} ref={ref} />
       <div className={style['hidden-container']}>
         <div className={style['hidden-inner']} ref={moreRef}>
@@ -130,28 +139,30 @@ const ButtonGroup = createWithIntlProvider(
           </SpaceComponent>
         </div>
       </div>
-      <SpaceComponent {...spaceProps}>
-        {list.slice(0, showLength).map((item, index) => (
-          <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
-        ))}
-        {otherList.length > 0 && (
-          <Dropdown
-            getPopupContainer={getPopupContainer}
-            trigger={trigger}
-            rootClassName={style['menu-list']}
-            menu={{
-              items: otherList.map((item, index) => {
-                return {
-                  key: index,
-                  label: renderButton(item, index, true)
-                };
-              })
-            }}
-          >
-            {renderMoreButton()}
-          </Dropdown>
-        )}
-      </SpaceComponent>
+      <div className={style['visible-content']}>
+        <SpaceComponent {...spaceProps}>
+          {list.slice(0, showLength).map((item, index) => (
+            <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
+          ))}
+          {otherList.length > 0 && (
+            <Dropdown
+              getPopupContainer={getPopupContainer}
+              trigger={trigger}
+              rootClassName={style['menu-list']}
+              menu={{
+                items: otherList.map((item, index) => {
+                  return {
+                    key: index,
+                    label: renderButton(item, index, true)
+                  };
+                })
+              }}
+            >
+              {renderMoreButton()}
+            </Dropdown>
+          )}
+        </SpaceComponent>
+      </div>
     </div>
   );
 });
