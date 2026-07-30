@@ -31,7 +31,15 @@
 }
 
 .more-link-btn {
-  padding: 5px 8px !important;
+  padding-inline: 8px !important;
+
+  &:global(.ant-btn-sm) {
+    padding-block: 0 !important;
+  }
+
+  &:not(:global(.ant-btn-sm)):not(:global(.ant-btn-lg)) {
+    padding-block: 5px !important;
+  }
 }
 
 .menu-list {
