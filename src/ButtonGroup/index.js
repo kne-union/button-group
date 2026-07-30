@@ -22,8 +22,17 @@ const ButtonGroup = createWithIntlProvider(
   const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, itemClassName, ...props } = Object.assign({}, p);
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
+  // ButtonGroup 的 size 给 Space 做间距；按钮尺寸取 list item 上更常见的 size，保证「更多」与外露按钮一致
+  const moreButtonSize = useMemo(() => {
+    for (const item of list) {
+      if (item && typeof item !== 'function' && item.size) {
+        return item.size;
+      }
+    }
+    return undefined;
+  }, [list]);
   const isControlled = Number.isInteger(showLengthProps);
-  // 未测量前不展示全部按钮，避免表格行 hover 时出现「先全展开再收进更多」的闪动
+  // 未测量前不展示全部按钮，避免表格行「先变高再回弹」
   const [showLengthState, setShowLength] = useState(0);
   const [ready, setReady] = useState(isControlled);
   const showLength = isControlled ? showLengthProps : showLengthState;
@@ -112,11 +121,11 @@ const ButtonGroup = createWithIntlProvider(
   const renderMoreButton = () =>
     more ||
     (moreType === 'link' ? (
-      <Button type="link" className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
-        <EllipsisOutlined style={{ fontSize: '16px' }} />
+      <Button type="link" size={moreButtonSize} className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
+        <EllipsisOutlined style={{ fontSize: moreButtonSize === 'small' ? '14px' : '16px' }} />
       </Button>
     ) : (
-      <Button>
+      <Button size={moreButtonSize}>
         {formatMessage({ id: 'more' })}
         <DownOutlined />
       </Button>
