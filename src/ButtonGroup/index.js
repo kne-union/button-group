@@ -122,9 +122,7 @@ const ButtonGroup = createWithIntlProvider(
   const renderMoreButton = () =>
     more ||
     (moreType === 'link' ? (
-      <Button type="link" size={moreButtonSize} className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
-        <EllipsisOutlined style={{ fontSize: moreButtonSize === 'small' ? '14px' : '16px' }} />
-      </Button>
+      <Button type="link" size={moreButtonSize} icon={<EllipsisOutlined style={{ fontSize: moreButtonSize === 'small' ? 14 : 16 }} />} className={classnames('button-group-item', itemClassName, style['more-link-btn'])} />
     ) : (
       <Button size={moreButtonSize}>
         {formatMessage({ id: 'more' })}

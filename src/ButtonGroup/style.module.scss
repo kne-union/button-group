@@ -30,10 +30,23 @@
   position: absolute;
 }
 
-// 与表格操作列 link 按钮（如 btn-no-padding）同高，避免有/无「更多」时行高在 43/38 间跳动
+// 与表格操作列 link 按钮（如 btn-no-padding）同高，避免有/无「更多」时行高在 43/38 间跳动；
+// inline-flex + icon 居中，避免 padding-block:0 时省略号偏上/偏下
 .more-link-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   padding-inline: 8px !important;
   padding-block: 0 !important;
+  line-height: 1 !important;
+
+  :global(.ant-btn-icon),
+  :global(.anticon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
 }
 
 .menu-list {
