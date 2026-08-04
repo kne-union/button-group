@@ -32,10 +32,11 @@ const ButtonGroup = createWithIntlProvider(
     return undefined;
   }, [list]);
   const isControlled = Number.isInteger(showLengthProps);
-  // 未测量前不展示全部按钮，避免表格行「先变高再回弹」
+  // 未测量前不展示全部按钮，避免表格行「先变高再回弹」；可见区至少留 1 个按钮占位，避免高度先塌再撑起
   const [showLengthState, setShowLength] = useState(0);
   const [ready, setReady] = useState(isControlled);
   const showLength = isControlled ? showLengthProps : showLengthState;
+  const visibleLength = !isControlled && !ready && list.length > 0 ? Math.max(showLength, 1) : showLength;
   const computedLength = useRefCallback(() => {
     const el = targetRef.current,
       moreEl = moreRef.current,
@@ -150,10 +151,10 @@ const ButtonGroup = createWithIntlProvider(
       </div>
       <div className={style['visible-content']}>
         <SpaceComponent {...spaceProps}>
-          {list.slice(0, showLength).map((item, index) => (
+          {list.slice(0, visibleLength).map((item, index) => (
             <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
           ))}
-          {otherList.length > 0 && (
+          {ready && otherList.length > 0 && (
             <Dropdown
               getPopupContainer={getPopupContainer}
               trigger={trigger}

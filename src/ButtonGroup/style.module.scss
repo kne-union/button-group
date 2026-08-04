@@ -30,16 +30,10 @@
   position: absolute;
 }
 
+// 与表格操作列 link 按钮（如 btn-no-padding）同高，避免有/无「更多」时行高在 43/38 间跳动
 .more-link-btn {
   padding-inline: 8px !important;
-
-  &:global(.ant-btn-sm) {
-    padding-block: 0 !important;
-  }
-
-  &:not(:global(.ant-btn-sm)):not(:global(.ant-btn-lg)) {
-    padding-block: 5px !important;
-  }
+  padding-block: 0 !important;
 }
 
 .menu-list {
