@@ -7,6 +7,11 @@
       visibility: hidden;
     }
   }
+
+  &.is-fixed {
+    width: fit-content;
+    max-width: 100%;
+  }
 }
 
 .width-container {
@@ -51,12 +56,21 @@
 
 .menu-list {
   :global {
+    .ant-dropdown-menu {
+      text-align: left;
+    }
+
     .ant-dropdown-menu-item {
       padding: 0 !important;
       background: transparent !important;
+      text-align: left;
     }
 
     .button-group-item {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      text-align: left !important;
       padding: 5px 8px !important;
       border: none !important;
       width: 100%;

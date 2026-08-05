@@ -19,7 +19,7 @@ const ButtonGroup = createWithIntlProvider(
   'button-group'
 )(p => {
   const { formatMessage } = useIntl();
-  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, itemClassName, ...props } = Object.assign({}, p);
+  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, placement, menuClassName, itemClassName, className, ...props } = Object.assign({}, p);
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
   // ButtonGroup 的 size 给 Space 做间距；按钮尺寸取 list item 上更常见的 size，保证「更多」与外露按钮一致
@@ -133,7 +133,7 @@ const ButtonGroup = createWithIntlProvider(
   const SpaceComponent = compact ? Space.Compact : Space;
 
   return (
-    <div className={classnames(style['button-group'], { [style['is-ready']]: ready })}>
+    <div className={classnames(style['button-group'], { [style['is-ready']]: ready, [style['is-fixed']]: isControlled }, className)}>
       <div className={style['width-container']} ref={ref} />
       <div className={style['hidden-container']}>
         <div className={style['hidden-inner']} ref={moreRef}>
@@ -156,7 +156,8 @@ const ButtonGroup = createWithIntlProvider(
             <Dropdown
               getPopupContainer={getPopupContainer}
               trigger={trigger}
-              rootClassName={style['menu-list']}
+              placement={placement || 'bottomLeft'}
+              rootClassName={classnames(style['menu-list'], menuClassName)}
               menu={{
                 items: otherList.map((item, index) => {
                   return {
