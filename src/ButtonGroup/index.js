@@ -1,5 +1,5 @@
 import React, { useMemo, Fragment } from 'react';
-import { EllipsisOutlined, DownOutlined } from '@ant-design/icons';
+import { DownOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Space, Tooltip } from 'antd';
 import classnames from 'classnames';
 import pick from 'lodash/pick';
@@ -122,9 +122,11 @@ const ButtonGroup = createWithIntlProvider(
   const renderMoreButton = () =>
     more ||
     (moreType === 'link' ? (
-      // 不用 icon 属性，避免 ant-btn-icon-only 固定方形尺寸导致相对文字 link 偏上
+      // 用中线省略号 ⋯，避免 EllipsisOutlined 字形在 viewBox 内偏上
       <Button type="link" size={moreButtonSize} className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
-        <EllipsisOutlined style={{ fontSize: moreButtonSize === 'small' ? 14 : 16 }} />
+        <span className={style['more-ellipsis']} aria-hidden>
+          ⋯
+        </span>
       </Button>
     ) : (
       <Button size={moreButtonSize}>
