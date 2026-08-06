@@ -3,3 +3,4 @@ export { default as ConfirmButton, ConfirmLink, ConfirmText, withConfirm } from 
 export { default as FetchButton } from './FetchButton';
 export { default } from './ButtonGroup';
 export { default as ButtonFooter } from './ButtonFooter';
+export { OverflowItemsShare as ButtonGroupShare } from '@kne/overflow-items';

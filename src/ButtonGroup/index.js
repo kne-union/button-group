@@ -1,17 +1,39 @@
-import React, { useMemo, useState, Fragment, useLayoutEffect } from 'react';
-import { EllipsisOutlined } from '@ant-design/icons';
-import useResize from '@kne/use-resize';
+import React, { useMemo, Fragment } from 'react';
+import { EllipsisOutlined, DownOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Space, Tooltip } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import useRefCallback from '@kne/use-ref-callback';
 import classnames from 'classnames';
+import pick from 'lodash/pick';
+import OverflowItems, { useOverflowItems } from '@kne/overflow-items';
 import LoadingButton from '../LoadingButton';
 import ConfirmButton from '../ConfirmButton';
-import pick from 'lodash/pick';
-import areaWidthComputed from './areaWidthComputed';
 import style from './style.module.scss';
 import { createWithIntlProvider, useIntl } from '@kne/react-intl';
 import zhCn from '../locale/zh-CN';
+
+const resolveGap = (spaceProps, compact) => {
+  if (compact) {
+    return 0;
+  }
+  const size = spaceProps?.size;
+  if (['small', 'middle', 'large'].indexOf(size) > -1) {
+    return (['small', 'middle', 'large'].indexOf(size) + 1) * 8;
+  }
+  if (Number.isInteger(size)) {
+    return size;
+  }
+  return 8;
+};
+
+const toShareItems = list =>
+  list.map((item, index) => {
+    if (typeof item === 'function') {
+      return { key: `fn-${index}` };
+    }
+    return {
+      key: item?.key ?? item?.children ?? item?.message ?? index,
+      children: typeof item?.children === 'string' || typeof item?.children === 'number' ? item.children : undefined
+    };
+  });
 
 const ButtonGroup = createWithIntlProvider(
   'zh-CN',
@@ -19,10 +41,12 @@ const ButtonGroup = createWithIntlProvider(
   'button-group'
 )(p => {
   const { formatMessage } = useIntl();
-  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, placement, menuClassName, itemClassName, className, ...props } = Object.assign({}, p);
+  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, placement, menuClassName, itemClassName, className, shareKey, ...props } = Object.assign({}, p);
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
-  // ButtonGroup 的 size 给 Space 做间距；按钮尺寸取 list item 上更常见的 size，保证「更多」与外露按钮一致
+  const gap = resolveGap(spaceProps, compact);
+  const shareItems = useMemo(() => toShareItems(list), [list]);
+
   const moreButtonSize = useMemo(() => {
     for (const item of list) {
       if (item && typeof item !== 'function' && item.size) {
@@ -31,54 +55,30 @@ const ButtonGroup = createWithIntlProvider(
     }
     return undefined;
   }, [list]);
+
   const isControlled = Number.isInteger(showLengthProps);
-  // 未测量前不展示全部按钮，避免表格行「先变高再回弹」；可见区至少留 1 个按钮占位，避免高度先塌再撑起
-  const [showLengthState, setShowLength] = useState(0);
-  const [ready, setReady] = useState(isControlled);
-  const showLength = isControlled ? showLengthProps : showLengthState;
-  const visibleLength = !isControlled && !ready && list.length > 0 ? Math.max(showLength, 1) : showLength;
-  const computedLength = useRefCallback(() => {
-    const el = targetRef.current,
-      moreEl = moreRef.current,
-      widthEl = ref.current;
-    if (!el || !widthEl) {
-      return;
-    }
-
-    const buttonEls = el.querySelectorAll('.button-group-item');
-    if (buttonEls.length === 0) {
-      return;
-    }
-
-    const amountWidth = Math.floor(widthEl.clientWidth),
-      moreBtnWidth = moreEl?.clientWidth || 0,
-      buttonWidthList = [].map.call(buttonEls, el => el.offsetWidth);
-    const targetLength = areaWidthComputed({
-      amountWidth,
-      moreBtnWidth,
-      buttonWidthList,
-      spaceProps,
-      compact
-    });
-    setShowLength(prev => (prev === targetLength ? prev : targetLength));
-    setReady(true);
+  const {
+    setContainerRef,
+    setMeasureRef,
+    setMoreMeasureRef,
+    visibleCount,
+    ready: measureReady,
+    shouldMeasure
+  } = useOverflowItems({
+    itemCount: list.length,
+    items: shareItems,
+    shareKey,
+    enabled: !isControlled && list.length > 0,
+    gap,
+    beforeReady: 'min',
+    debounce: 80,
+    itemSelector: '[data-overflow-item]'
   });
-  const ref = useResize(computedLength);
-  const targetRef = useResize(computedLength);
-  const moreRef = useResize(computedLength);
-  const otherList = list.slice(showLength);
 
-  useLayoutEffect(() => {
-    if (isControlled) {
-      return;
-    }
-    if (list.length === 0) {
-      setShowLength(0);
-      setReady(true);
-      return;
-    }
-    computedLength();
-  }, [list, computedLength, isControlled]);
+  const ready = isControlled || measureReady;
+  const showLength = isControlled ? showLengthProps : visibleCount;
+  const visibleLength = !isControlled && !ready && list.length > 0 ? Math.max(showLength, 1) : showLength;
+  const otherList = list.slice(showLength);
 
   const renderButton = (renderItem, index, isDropdown) => {
     if (typeof renderItem === 'function') {
@@ -90,15 +90,15 @@ const ButtonGroup = createWithIntlProvider(
         { isDropdown }
       );
     }
-    const { className, confirm, buttonComponent, tooltipProps, hidden, isDelete, isModal, ...props } = renderItem;
+    const { className: itemCls, confirm, buttonComponent, tooltipProps, hidden, isDelete, isModal, ...btnProps } = renderItem;
 
-    const isConfirm = confirm || !!props.message || isDelete;
+    const isConfirm = confirm || !!btnProps.message || isDelete;
     const CurrentButton = buttonComponent || (isConfirm ? ConfirmButton : LoadingButton);
     const currentButton = (
       <CurrentButton
         {...Object.assign(
           {},
-          props,
+          btnProps,
           isConfirm
             ? {
                 danger: isDelete !== false,
@@ -113,7 +113,7 @@ const ButtonGroup = createWithIntlProvider(
           isDropdown ? { type: 'default' } : {}
         )}
         key={index}
-        className={classnames('button-group-item', className, itemClassName)}
+        className={classnames('button-group-item', itemCls, itemClassName)}
       />
     );
     return tooltipProps ? <Tooltip {...tooltipProps}>{currentButton}</Tooltip> : currentButton;
@@ -134,20 +134,19 @@ const ButtonGroup = createWithIntlProvider(
 
   return (
     <div className={classnames(style['button-group'], { [style['is-ready']]: ready, [style['is-fixed']]: isControlled }, className)}>
-      <div className={style['width-container']} ref={ref} />
-      <div className={style['hidden-container']}>
-        <div className={style['hidden-inner']} ref={moreRef}>
-          {renderMoreButton()}
+      {shouldMeasure ? (
+        <div ref={setMeasureRef} className={style['hidden-container']} aria-hidden style={{ gap }}>
+          {list.map((item, index) => (
+            <div key={index} data-overflow-item className={style['hidden-inner']}>
+              {renderButton(item, index, false)}
+            </div>
+          ))}
+          <div ref={setMoreMeasureRef} className={style['hidden-inner']}>
+            {renderMoreButton()}
+          </div>
         </div>
-        <div className={style['hidden-inner']} ref={targetRef}>
-          <SpaceComponent {...spaceProps}>
-            {list.map((item, index) => (
-              <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
-            ))}
-          </SpaceComponent>
-        </div>
-      </div>
-      <div className={style['visible-content']}>
+      ) : null}
+      <div ref={setContainerRef} className={style['visible-content']}>
         <SpaceComponent {...spaceProps}>
           {list.slice(0, visibleLength).map((item, index) => (
             <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
@@ -175,5 +174,7 @@ const ButtonGroup = createWithIntlProvider(
     </div>
   );
 });
+
+ButtonGroup.Share = OverflowItems.Share;
 
 export default ButtonGroup;
