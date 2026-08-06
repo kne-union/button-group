@@ -22,9 +22,10 @@
   width: 100%;
 
   // 文字 link 会把 space-item 撑高，more 的 icon 更矮：拉齐高度并在 item 内垂直居中
+  // !important：压过 ant-space-align-center 的 align-items:center，否则 item 拉不齐
   :global {
     .ant-space {
-      align-items: stretch;
+      align-items: stretch !important;
     }
 
     .ant-space-item {
