@@ -122,7 +122,10 @@ const ButtonGroup = createWithIntlProvider(
   const renderMoreButton = () =>
     more ||
     (moreType === 'link' ? (
-      <Button type="link" size={moreButtonSize} icon={<EllipsisOutlined style={{ fontSize: moreButtonSize === 'small' ? 14 : 16 }} />} className={classnames('button-group-item', itemClassName, style['more-link-btn'])} />
+      // 不用 icon 属性，避免 ant-btn-icon-only 固定方形尺寸导致相对文字 link 偏上
+      <Button type="link" size={moreButtonSize} className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
+        <EllipsisOutlined style={{ fontSize: moreButtonSize === 'small' ? 14 : 16 }} />
+      </Button>
     ) : (
       <Button size={moreButtonSize}>
         {formatMessage({ id: 'more' })}
