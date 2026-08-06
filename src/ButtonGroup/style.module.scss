@@ -20,6 +20,18 @@
   align-items: center;
   min-width: 0;
   width: 100%;
+
+  // 文字 link 会把 space-item 撑高，more 的 icon 更矮：拉齐高度并在 item 内垂直居中
+  :global {
+    .ant-space {
+      align-items: stretch;
+    }
+
+    .ant-space-item {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
 }
 
 .hidden-container {
@@ -41,33 +53,19 @@
 .more-trigger {
   display: inline-flex;
   align-items: center;
-  line-height: 1;
+  height: 100%;
 }
 
-// 与表格操作列 link 按钮（如 btn-no-padding）同高，避免有/无「更多」时行高跳动；
-// 与文字 link 共用行高，图标用 flex 居中，避免省略号相对「编辑」等文字偏上
 .more-link-btn {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   padding-inline: 8px !important;
   padding-block: 0 !important;
-  // 与 ant-btn 文字行盒一致，勿用 line-height:1 缩成 ~16px
   line-height: 1.571 !important;
   width: auto !important;
-  height: auto !important;
+  height: 100% !important;
   min-width: 0 !important;
-
-  :global(.anticon) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 0;
-  }
-
-  :global(svg) {
-    display: block;
-  }
 }
 
 .menu-list {
