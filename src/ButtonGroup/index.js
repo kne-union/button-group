@@ -131,6 +131,7 @@ const ButtonGroup = createWithIntlProvider(
     ));
 
   const SpaceComponent = compact ? Space.Compact : Space;
+  const { align: spaceAlign, ...restSpaceProps } = spaceProps;
 
   return (
     <div className={classnames(style['button-group'], { [style['is-ready']]: ready, [style['is-fixed']]: isControlled }, className)}>
@@ -147,7 +148,7 @@ const ButtonGroup = createWithIntlProvider(
         </div>
       ) : null}
       <div ref={setContainerRef} className={style['visible-content']}>
-        <SpaceComponent {...spaceProps}>
+        <SpaceComponent {...restSpaceProps} align={spaceAlign ?? 'center'}>
           {list.slice(0, visibleLength).map((item, index) => (
             <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
           ))}
@@ -166,7 +167,7 @@ const ButtonGroup = createWithIntlProvider(
                 })
               }}
             >
-              {renderMoreButton()}
+              <span className={style['more-trigger']}>{renderMoreButton()}</span>
             </Dropdown>
           )}
         </SpaceComponent>

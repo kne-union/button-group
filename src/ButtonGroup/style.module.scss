@@ -16,6 +16,8 @@
 }
 
 .visible-content {
+  display: flex;
+  align-items: center;
   min-width: 0;
   width: 100%;
 }
@@ -36,8 +38,15 @@
   flex-shrink: 0;
 }
 
+.more-trigger {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
 // 与表格操作列 link 按钮（如 btn-no-padding）同高，避免有/无「更多」时行高在 43/38 间跳动；
-// inline-flex + icon 居中，避免 padding-block:0 时省略号偏上/偏下
+// inline-flex + icon 居中，避免 padding-block:0 时省略号偏上/偏下；
+// 取消 icon-only 方形宽高，避免相对文字 link 视觉中线偏移
 .more-link-btn {
   display: inline-flex !important;
   align-items: center !important;
@@ -45,6 +54,9 @@
   padding-inline: 8px !important;
   padding-block: 0 !important;
   line-height: 1 !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
 
   :global(.ant-btn-icon),
   :global(.anticon) {
@@ -52,6 +64,10 @@
     align-items: center;
     justify-content: center;
     line-height: 0;
+  }
+
+  :global(svg) {
+    display: block;
   }
 }
 
