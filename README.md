@@ -87,11 +87,12 @@ npm i --save @kne/button-group
 
 ### ButtonFooter
 
-页面底部按钮区域组件，可以自动计算高度并设置 CSS 变量，方便页面布局和样式调整。在小屏幕下，会自动将内容渲染到 body，确保按钮始终可见。
+页面底部按钮区域组件，可以自动计算高度并设置 CSS 变量，方便页面布局和样式调整。在小屏幕下，会自动将内容渲染到 body，确保按钮始终可见；可通过 `placement` 控制移动端固定条的垂直位置与内容水平对齐。
 
 **主要特性：**
 - 自动计算高度并设置 CSS 变量
-- 响应式设计，小屏幕下固定到底部
+- 响应式设计，小屏幕下固定到顶部/底部
+- 支持 `placement` 控制垂直位置与水平对齐
 - 支持多种布局方式（居中、左右分布等）
 - 适用于表单页面的底部操作区
 
@@ -99,7 +100,7 @@ npm i --save @kne/button-group
 - 表单页面底部操作按钮
 - 详情页面底部操作按钮
 - 对话框底部按钮
-- 任何需要固定在底部的操作按钮区域
+- 任何需要固定在顶部/底部的操作按钮区域
 
 ## 组件关系
 
@@ -1490,15 +1491,25 @@ render(<BaseExample />);
 ```
 
 - ButtonFooter 底部按钮区(全屏)
-- ButtonFooter 是页面底部按钮区域组件。请切换到手机模式预览：移动端会将操作栏固定到可视区域底部。
+- ButtonFooter 是页面底部按钮区域组件。请切换到手机模式预览：可通过 placement 控制移动端固定条的垂直位置与水平对齐（如 bottom、topEnd）。
 - _ButtonGroup(@kne/current-lib_button-group)[import * as _ButtonGroup from "@kne/button-group"],(@kne/current-lib_button-group/dist/index.css),antd(antd)
 
 ```jsx
 const { ButtonFooter } = _ButtonGroup;
-const { Flex, Button, Card, Form, Input, Typography, Alert, message } = antd;
+const { Flex, Button, Card, Form, Input, Typography, Alert, message, Radio, Space } = antd;
+
+const PLACEMENT_OPTIONS = [
+  { label: 'bottom', value: 'bottom' },
+  { label: 'bottomStart', value: 'bottomStart' },
+  { label: 'bottomEnd', value: 'bottomEnd' },
+  { label: 'top', value: 'top' },
+  { label: 'topStart', value: 'topStart' },
+  { label: 'topEnd', value: 'topEnd' }
+];
 
 const BaseExample = () => {
   const [form] = Form.useForm();
+  const [placement, setPlacement] = React.useState('bottom');
 
   return (
     <Flex vertical gap={16} style={{ width: '100%', minHeight: 360 }}>
@@ -1506,10 +1517,20 @@ const BaseExample = () => {
         type="info"
         showIcon
         message="请切换到手机模式预览"
-        description="ButtonFooter 在移动端会将操作栏固定到底部。请点击示例预览工具栏中的「手机」图标，切换为手机模式后查看效果。"
+        description="ButtonFooter 在移动端会将操作栏固定到指定位置。请点击示例预览工具栏中的「手机」图标，切换为手机模式后查看效果，并通过下方选项切换 placement。"
       />
+      <Space direction="vertical" size={4}>
+        <Typography.Text type="secondary">placement（移动端固定条位置）</Typography.Text>
+        <Radio.Group
+          optionType="button"
+          buttonStyle="solid"
+          options={PLACEMENT_OPTIONS}
+          value={placement}
+          onChange={e => setPlacement(e.target.value)}
+        />
+      </Space>
       <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        桌面端按钮跟随文档流排列；移动端会将下方操作栏 Portal 到可视区域底部并固定显示。
+        桌面端按钮跟随文档流排列；移动端会将下方操作栏 Portal 到可视区域，并按 placement 固定到顶部/底部，同时控制内容水平对齐。
       </Typography.Paragraph>
       <Card title="用户信息编辑" style={{ flex: 1 }}>
         <Form form={form} layout="vertical">
@@ -1545,13 +1566,11 @@ const BaseExample = () => {
           </Form.Item>
         </Form>
       </Card>
-      <ButtonFooter>
-        <Flex justify="flex-end" gap={8} style={{ padding: '16px 24px' }}>
-          <Button onClick={() => form.resetFields()}>重置</Button>
-          <Button type="primary" onClick={() => message.success('保存成功')}>
-            保存
-          </Button>
-        </Flex>
+      <ButtonFooter placement={placement}>
+        <Button onClick={() => form.resetFields()}>重置</Button>
+        <Button type="primary" onClick={() => message.success('保存成功')}>
+          保存
+        </Button>
       </ButtonFooter>
     </Flex>
   );
@@ -1731,9 +1750,24 @@ api: async ({ params }) => {
 | className | string | - | 容器的自定义类名 |
 | innerClassName | string | - | 内部容器的自定义类名 |
 | target | HTMLElement | document.body | 移动端渲染的目标容器 |
+| placement | `'top'` \| `'topStart'` \| `'topEnd'` \| `'bottom'` \| `'bottomStart'` \| `'bottomEnd'` | `'bottom'` | 移动端固定条位置：垂直方向（top/bottom）+ 内容水平对齐（Start/中/End） |
+
+### placement 说明
+
+| 值 | 垂直 | 水平（内容对齐） |
+|----|------|------------------|
+| `bottom` | 底部 | center |
+| `bottomStart` | 底部 | start |
+| `bottomEnd` | 底部 | end |
+| `top` | 顶部 | center |
+| `topStart` | 顶部 | start |
+| `topEnd` | 顶部 | end |
+
+> `placement` 仅影响移动端固定条；桌面端仍跟随文档流。固定条仍为全宽，Start/End 只改变内容的 `justify-content`。非法值回退为 `bottom`。
 
 ### 特性
 
 - 在小屏幕（≤768px）下，会将内容使用 Portal 渲染到 body
 - 自动计算高度并设置 CSS 变量
-- 适用于固定在页面底部的操作按钮区域
+- 支持通过 `placement` 控制移动端固定位置与内容对齐
+- 适用于固定在页面顶部/底部的操作按钮区域

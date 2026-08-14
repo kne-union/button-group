@@ -3,15 +3,12 @@
 }
 
 .inner-mobile {
-  bottom: 0;
   left: 0;
   right: 0;
   z-index: 10;
   background: #ffffff;
-  padding: 12px 12px 22px 12px;
   display: flex;
   gap: 10px;
-  justify-content: center;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
 
   &:global(.kne-is-boundary) {
@@ -20,5 +17,31 @@
 
   &:global(.kne-is-viewport) {
     position: fixed;
+  }
+
+  &.placement-bottom {
+    bottom: 0;
+    top: auto;
+    padding: 12px 12px 22px 12px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  &.placement-top {
+    top: 0;
+    bottom: auto;
+    padding: 22px 12px 12px 12px;
+    box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  &.justify-start {
+    justify-content: flex-start;
+  }
+
+  &.justify-center {
+    justify-content: center;
+  }
+
+  &.justify-end {
+    justify-content: flex-end;
   }
 }
