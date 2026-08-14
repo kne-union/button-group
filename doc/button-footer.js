@@ -1,8 +1,18 @@
 const { ButtonFooter } = _ButtonGroup;
-const { Flex, Button, Card, Form, Input, Typography, Alert, message } = antd;
+const { Flex, Button, Card, Form, Input, Typography, Alert, message, Radio, Space } = antd;
+
+const PLACEMENT_OPTIONS = [
+  { label: 'bottom', value: 'bottom' },
+  { label: 'bottomStart', value: 'bottomStart' },
+  { label: 'bottomEnd', value: 'bottomEnd' },
+  { label: 'top', value: 'top' },
+  { label: 'topStart', value: 'topStart' },
+  { label: 'topEnd', value: 'topEnd' }
+];
 
 const BaseExample = () => {
   const [form] = Form.useForm();
+  const [placement, setPlacement] = React.useState('bottom');
 
   return (
     <Flex vertical gap={16} style={{ width: '100%', minHeight: 360 }}>
@@ -10,10 +20,20 @@ const BaseExample = () => {
         type="info"
         showIcon
         message="请切换到手机模式预览"
-        description="ButtonFooter 在移动端会将操作栏固定到底部。请点击示例预览工具栏中的「手机」图标，切换为手机模式后查看效果。"
+        description="ButtonFooter 在移动端会将操作栏固定到指定位置。请点击示例预览工具栏中的「手机」图标，切换为手机模式后查看效果，并通过下方选项切换 placement。"
       />
+      <Space direction="vertical" size={4}>
+        <Typography.Text type="secondary">placement（移动端固定条位置）</Typography.Text>
+        <Radio.Group
+          optionType="button"
+          buttonStyle="solid"
+          options={PLACEMENT_OPTIONS}
+          value={placement}
+          onChange={e => setPlacement(e.target.value)}
+        />
+      </Space>
       <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        桌面端按钮跟随文档流排列；移动端会将下方操作栏 Portal 到可视区域底部并固定显示。
+        桌面端按钮跟随文档流排列；移动端会将下方操作栏 Portal 到可视区域，并按 placement 固定到顶部/底部，同时控制内容水平对齐。
       </Typography.Paragraph>
       <Card title="用户信息编辑" style={{ flex: 1 }}>
         <Form form={form} layout="vertical">
@@ -49,13 +69,11 @@ const BaseExample = () => {
           </Form.Item>
         </Form>
       </Card>
-      <ButtonFooter>
-        <Flex justify="flex-end" gap={8} style={{ padding: '16px 24px' }}>
-          <Button onClick={() => form.resetFields()}>重置</Button>
-          <Button type="primary" onClick={() => message.success('保存成功')}>
-            保存
-          </Button>
-        </Flex>
+      <ButtonFooter placement={placement}>
+        <Button onClick={() => form.resetFields()}>重置</Button>
+        <Button type="primary" onClick={() => message.success('保存成功')}>
+          保存
+        </Button>
       </ButtonFooter>
     </Flex>
   );

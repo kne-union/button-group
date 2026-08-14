@@ -163,9 +163,24 @@ api: async ({ params }) => {
 | className | string | - | 容器的自定义类名 |
 | innerClassName | string | - | 内部容器的自定义类名 |
 | target | HTMLElement | document.body | 移动端渲染的目标容器 |
+| placement | `'top'` \| `'topStart'` \| `'topEnd'` \| `'bottom'` \| `'bottomStart'` \| `'bottomEnd'` | `'bottom'` | 移动端固定条位置：垂直方向（top/bottom）+ 内容水平对齐（Start/中/End） |
+
+### placement 说明
+
+| 值 | 垂直 | 水平（内容对齐） |
+|----|------|------------------|
+| `bottom` | 底部 | center |
+| `bottomStart` | 底部 | start |
+| `bottomEnd` | 底部 | end |
+| `top` | 顶部 | center |
+| `topStart` | 顶部 | start |
+| `topEnd` | 顶部 | end |
+
+> `placement` 仅影响移动端固定条；桌面端仍跟随文档流。固定条仍为全宽，Start/End 只改变内容的 `justify-content`。非法值回退为 `bottom`。
 
 ### 特性
 
 - 在小屏幕（≤768px）下，会将内容使用 Portal 渲染到 body
 - 自动计算高度并设置 CSS 变量
-- 适用于固定在页面底部的操作按钮区域
+- 支持通过 `placement` 控制移动端固定位置与内容对齐
+- 适用于固定在页面顶部/底部的操作按钮区域
