@@ -12,7 +12,25 @@
 | getPopupContainer | function | - | 下拉菜单渲染父节点 |
 | trigger | string | - | 下拉菜单触发方式 |
 | itemClassName | string | - | 按钮项的自定义类名 |
+| place | `'start'` \| `'center'` \| `'end'` \| `'topStart'` \| `'top'` \| `'topEnd'` \| `'bottomStart'` \| `'bottom'` \| `'bottomEnd'` | `'start'` | 按钮在满宽容器内的九点定位。根节点仍铺满外部 Flex 槽位，只改变内部对齐；不占用 `placement` |
+| placement | string | `'bottomLeft'` | 更多下拉菜单位置（antd Dropdown placement） |
 | ...SpaceProps | - | - | Space 组件的其他属性（size、split、align、style等） |
+
+### place 说明
+
+| 值 | 垂直 | 水平 |
+|----|------|------|
+| `start` | center | start |
+| `center` | center | center |
+| `end` | center | end |
+| `topStart` | top | start |
+| `top` | top | center |
+| `topEnd` | top | end |
+| `bottomStart` | bottom | start |
+| `bottom` | bottom | center |
+| `bottomEnd` | bottom | end |
+
+非法值回退为 `start`。垂直方向仅在外部容器被撑高（如 Flex stretch）时可见。
 
 ### list 配置项
 

@@ -25,11 +25,11 @@ const resolveTarget = target => {
 const ButtonFooter = ({ children, className, innerClassName, target, placement = 'bottom' }) => {
   const rootRef = useRef(null);
   const [mountNode, setMountNode] = useState(null);
-  const customTarget = resolveTarget(target);
+  const hasTarget = target != null;
   const { vertical, horizontal } = useMemo(() => resolvePlacement(placement), [placement]);
   const { isMobile, fixedModeClass, getMountNode, anchorRef } = useMobilePopupMount({
-    cover: MOBILE_POPUP_COVER.viewport,
-    ...(customTarget ? { getPopupContainer: () => customTarget } : {})
+    cover: hasTarget ? MOBILE_POPUP_COVER.boundary : MOBILE_POPUP_COVER.viewport,
+    ...(hasTarget ? { getPopupContainer: () => resolveTarget(target) } : {})
   });
 
   const setRef = useCallback(
@@ -45,23 +45,10 @@ const ButtonFooter = ({ children, className, innerClassName, target, placement =
       setMountNode(null);
       return;
     }
-    setMountNode(customTarget || getMountNode(rootRef.current));
-  }, [customTarget, getMountNode, isMobile]);
+    setMountNode((hasTarget && resolveTarget(target)) || getMountNode(rootRef.current));
+  }, [hasTarget, target, getMountNode, isMobile]);
 
-  const inner = (
-    <div
-      className={classnames(
-        style['inner'],
-        style['inner-mobile'],
-        style[`placement-${vertical}`],
-        style[`justify-${horizontal}`],
-        fixedModeClass,
-        innerClassName
-      )}
-    >
-      {children}
-    </div>
-  );
+  const inner = <div className={classnames(style['inner'], style['inner-mobile'], style[`placement-${vertical}`], style[`justify-${horizontal}`], fixedModeClass, innerClassName)}>{children}</div>;
 
   return (
     <div ref={setRef} className={classnames(style['button-footer'], isMobile && style['is-mobile'], className)}>

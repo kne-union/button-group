@@ -1,5 +1,5 @@
 const { default: ButtonGroup } = _ButtonGroup;
-const { Flex, Button, Space, Typography } = antd;
+const { Flex, Button, Space, Typography, Radio } = antd;
 const { useState } = React;
 const { Text } = Typography;
 
@@ -137,6 +137,51 @@ const StateExample = () => {
   );
 };
 
+const PLACE_OPTIONS = [
+  { label: 'start', value: 'start' },
+  { label: 'center', value: 'center' },
+  { label: 'end', value: 'end' },
+  { label: 'topStart', value: 'topStart' },
+  { label: 'top', value: 'top' },
+  { label: 'topEnd', value: 'topEnd' },
+  { label: 'bottomStart', value: 'bottomStart' },
+  { label: 'bottom', value: 'bottom' },
+  { label: 'bottomEnd', value: 'bottomEnd' }
+];
+
+// 容器内位置
+const PlaceExample = () => {
+  const [place, setPlace] = useState('end');
+  const list = [
+    { type: 'primary', children: '编辑' },
+    { children: '删除', isDelete: true }
+  ];
+  return (
+    <Flex gap={16} vertical>
+      <Text type="secondary">place：按钮在满宽容器内的九点定位。根节点铺满外部槽位，不占用 placement（下拉位置）。</Text>
+      <Radio.Group
+        optionType="button"
+        buttonStyle="solid"
+        options={PLACE_OPTIONS}
+        value={place}
+        onChange={e => setPlace(e.target.value)}
+      />
+      <Flex
+        style={{
+          width: 480,
+          height: 160,
+          padding: 12,
+          background: '#f5f5f5',
+          borderRadius: 8,
+          boxSizing: 'border-box'
+        }}
+      >
+        <ButtonGroup place={place} list={list} />
+      </Flex>
+    </Flex>
+  );
+};
+
 // 工具提示
 const TooltipExample = () => {
   return (
@@ -192,6 +237,11 @@ const BaseExample = () => {
         <div>
           <Typography.Title level={4}>指定显示数量</Typography.Title>
           <FixedLengthExample />
+        </div>
+
+        <div>
+          <Typography.Title level={4}>容器内位置（place）</Typography.Title>
+          <PlaceExample />
         </div>
 
         <div>

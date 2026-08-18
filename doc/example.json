@@ -3,7 +3,7 @@
   "list": [
     {
       "title": "ButtonGroup 基础用法",
-      "description": "ButtonGroup 能够根据容器宽度自动调整显示的按钮数量，并将多余的按钮放入下拉菜单中。适用于操作栏、工具栏等场景。",
+      "description": "ButtonGroup 能够根据容器宽度自动调整显示的按钮数量，并将多余的按钮放入下拉菜单中。可通过 place 控制按钮在满宽容器内的九点定位。",
       "code": "./button-group.js",
       "scope": [
         {
@@ -70,7 +70,7 @@
     },
     {
       "title": "ButtonFooter 底部按钮区",
-      "description": "ButtonFooter 是页面底部按钮区域组件。请切换到手机模式预览：可通过 placement 控制移动端固定条的垂直位置与水平对齐（如 bottom、topEnd）。",
+      "description": "ButtonFooter 是页面操作条组件。切换 placement 可预览操作条固定到顶部/底部，以及左、中、右对齐。",
       "isFull": true,
       "code": "./button-footer.js",
       "scope": [
