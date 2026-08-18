@@ -13,6 +13,15 @@
     width: fit-content;
     max-width: 100%;
   }
+
+  &.is-placed {
+    width: 100%;
+    height: 100%;
+
+    .visible-content {
+      height: 100%;
+    }
+  }
 }
 
 .visible-content {
@@ -20,6 +29,30 @@
   align-items: center;
   min-width: 0;
   width: 100%;
+
+  &.place-horizontal-start {
+    justify-content: flex-start;
+  }
+
+  &.place-horizontal-center {
+    justify-content: center;
+  }
+
+  &.place-horizontal-end {
+    justify-content: flex-end;
+  }
+
+  &.place-vertical-top {
+    align-items: flex-start;
+  }
+
+  &.place-vertical-center {
+    align-items: center;
+  }
+
+  &.place-vertical-bottom {
+    align-items: flex-end;
+  }
 
   // 文字 link 会把 space-item 撑高，more 的 icon 更矮：拉齐高度并在 item 内垂直居中
   // !important：压过 ant-space-align-center 的 align-items:center，否则 item 拉不齐

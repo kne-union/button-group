@@ -1,5 +1,5 @@
 const { ButtonFooter } = _ButtonGroup;
-const { Flex, Button, Card, Form, Input, Typography, Alert, message, Radio, Space } = antd;
+const { Flex, Button, Typography, Alert, Radio, Space, Tag } = antd;
 
 const PLACEMENT_OPTIONS = [
   { label: 'bottom', value: 'bottom' },
@@ -11,19 +11,24 @@ const PLACEMENT_OPTIONS = [
 ];
 
 const BaseExample = () => {
-  const [form] = Form.useForm();
+  const frameRef = React.useRef(null);
   const [placement, setPlacement] = React.useState('bottom');
 
   return (
-    <Flex vertical gap={16} style={{ width: '100%', minHeight: 360 }}>
+    <Flex vertical gap={16} style={{ width: '100%' }}>
+      <style>{`
+        .demo-button-footer-bar {
+          background: #e6f4ff !important;
+        }
+      `}</style>
       <Alert
         type="info"
         showIcon
-        message="请切换到手机模式预览"
-        description="ButtonFooter 在移动端会将操作栏固定到指定位置。请点击示例预览工具栏中的「手机」图标，切换为手机模式后查看效果，并通过下方选项切换 placement。"
+        message="切换 placement 查看操作条位置"
+        description="预览框模拟页面容器。操作条会按 placement 固定到顶部或底部，Start / 默认 / End 分别对应左、中、右对齐。"
       />
       <Space direction="vertical" size={4}>
-        <Typography.Text type="secondary">placement（移动端固定条位置）</Typography.Text>
+        <Typography.Text type="secondary">placement</Typography.Text>
         <Radio.Group
           optionType="button"
           buttonStyle="solid"
@@ -32,49 +37,39 @@ const BaseExample = () => {
           onChange={e => setPlacement(e.target.value)}
         />
       </Space>
-      <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        桌面端按钮跟随文档流排列；移动端会将下方操作栏 Portal 到可视区域，并按 placement 固定到顶部/底部，同时控制内容水平对齐。
-      </Typography.Paragraph>
-      <Card title="用户信息编辑" style={{ flex: 1 }}>
-        <Form form={form} layout="vertical">
-          <Form.Item name="username" label="用户名">
-            <Input placeholder="请输入用户名" />
-          </Form.Item>
-          <Form.Item name="email" label="邮箱">
-            <Input placeholder="请输入邮箱" />
-          </Form.Item>
-          <Form.Item name="phone" label="手机号">
-            <Input placeholder="请输入手机号" />
-          </Form.Item>
-          <Form.Item name="department" label="部门">
-            <Input placeholder="请输入部门" />
-          </Form.Item>
-          <Form.Item name="position" label="职位">
-            <Input placeholder="请输入职位" />
-          </Form.Item>
-          <Form.Item name="company" label="公司">
-            <Input placeholder="请输入公司名称" />
-          </Form.Item>
-          <Form.Item name="address" label="联系地址">
-            <Input placeholder="请输入联系地址" />
-          </Form.Item>
-          <Form.Item name="emergencyContact" label="紧急联系人">
-            <Input placeholder="请输入紧急联系人" />
-          </Form.Item>
-          <Form.Item name="emergencyPhone" label="紧急联系电话">
-            <Input placeholder="请输入紧急联系电话" />
-          </Form.Item>
-          <Form.Item name="remark" label="备注">
-            <Input.TextArea placeholder="请输入备注" rows={6} />
-          </Form.Item>
-        </Form>
-      </Card>
-      <ButtonFooter placement={placement}>
-        <Button onClick={() => form.resetFields()}>重置</Button>
-        <Button type="primary" onClick={() => message.success('保存成功')}>
-          保存
-        </Button>
-      </ButtonFooter>
+      <div
+        ref={frameRef}
+        className="kne-responsive-boundary"
+        style={{
+          position: 'relative',
+          minHeight: 520,
+          background: '#f5f5f5',
+          borderRadius: 8,
+          overflow: 'hidden',
+          border: '1px solid #f0f0f0'
+        }}
+      >
+        <div style={{ padding: 24 }}>
+          <Space direction="vertical" size={12} style={{ width: '100%' }}>
+            <Space>
+              <Typography.Title level={5} style={{ margin: 0 }}>
+                春季外套
+              </Typography.Title>
+              <Tag color="orange">待支付</Tag>
+            </Space>
+            <Typography.Text type="secondary">订单号 OD20260818001</Typography.Text>
+            <Typography.Text>数量：1 件</Typography.Text>
+            <Typography.Text>应付金额：¥299.00</Typography.Text>
+            <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
+              请在 29:59 内完成支付，超时订单将自动取消。
+            </Typography.Paragraph>
+          </Space>
+        </div>
+        <ButtonFooter placement={placement} target={() => frameRef.current} innerClassName="demo-button-footer-bar">
+          <Button>取消订单</Button>
+          <Button type="primary">去支付</Button>
+        </ButtonFooter>
+      </div>
     </Flex>
   );
 };

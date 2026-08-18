@@ -10,6 +10,20 @@ import style from './style.module.scss';
 import { createWithIntlProvider, useIntl } from '@kne/react-intl';
 import zhCn from '../locale/zh-CN';
 
+const PLACE_MAP = {
+  start: { vertical: 'center', horizontal: 'start' },
+  center: { vertical: 'center', horizontal: 'center' },
+  end: { vertical: 'center', horizontal: 'end' },
+  topStart: { vertical: 'top', horizontal: 'start' },
+  top: { vertical: 'top', horizontal: 'center' },
+  topEnd: { vertical: 'top', horizontal: 'end' },
+  bottomStart: { vertical: 'bottom', horizontal: 'start' },
+  bottom: { vertical: 'bottom', horizontal: 'center' },
+  bottomEnd: { vertical: 'bottom', horizontal: 'end' }
+};
+
+const resolvePlace = place => PLACE_MAP[place] || PLACE_MAP.start;
+
 const resolveGap = (spaceProps, compact) => {
   if (compact) {
     return 0;
@@ -41,9 +55,10 @@ const ButtonGroup = createWithIntlProvider(
   'button-group'
 )(p => {
   const { formatMessage } = useIntl();
-  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, placement, menuClassName, itemClassName, className, shareKey, ...props } = Object.assign({}, p);
+  const { list: originalList, more, moreType, compact, showLength: showLengthProps, getPopupContainer, trigger, placement, menuClassName, itemClassName, className, shareKey, place, ...props } = Object.assign({}, p);
   const list = useMemo(() => originalList.filter(item => !item?.hidden), [originalList]);
   const spaceProps = pick(props, ['size', 'split', 'align', 'style']);
+  const { vertical: placeVertical, horizontal: placeHorizontal } = resolvePlace(place);
   const gap = resolveGap(spaceProps, compact);
   const shareItems = useMemo(() => toShareItems(list), [list]);
 
@@ -137,7 +152,7 @@ const ButtonGroup = createWithIntlProvider(
   const { align: spaceAlign, ...restSpaceProps } = spaceProps;
 
   return (
-    <div className={classnames(style['button-group'], { [style['is-ready']]: ready, [style['is-fixed']]: isControlled }, className)}>
+    <div className={classnames(style['button-group'], { [style['is-ready']]: ready, [style['is-fixed']]: isControlled, [style['is-placed']]: !!place }, className)}>
       {shouldMeasure ? (
         <div ref={setMeasureRef} className={style['hidden-container']} aria-hidden style={{ gap }}>
           {list.map((item, index) => (
@@ -150,7 +165,7 @@ const ButtonGroup = createWithIntlProvider(
           </div>
         </div>
       ) : null}
-      <div ref={setContainerRef} className={style['visible-content']}>
+      <div ref={setContainerRef} className={classnames(style['visible-content'], style[`place-horizontal-${placeHorizontal}`], style[`place-vertical-${placeVertical}`])}>
         <SpaceComponent {...restSpaceProps} align={spaceAlign ?? 'center'}>
           {list.slice(0, visibleLength).map((item, index) => (
             <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
