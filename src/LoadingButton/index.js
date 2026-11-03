@@ -1,6 +1,10 @@
 import React, { useState, forwardRef } from 'react';
 import { Button } from 'antd';
+import classnames from 'classnames';
 import useRefCallback from '@kne/use-ref-callback';
+import style from './style.module.scss';
+
+export const loadingKeepSizeClassName = style['keep-size'];
 
 export const useLoading = callback => {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,10 +27,10 @@ export const useLoading = callback => {
   };
 };
 
-const LoadingButton = forwardRef(({ onClick, children, loading, ...props }, ref) => {
+const LoadingButton = forwardRef(({ onClick, children, loading, className, ...props }, ref) => {
   const { isLoading, callback } = useLoading(onClick);
   return (
-    <Button ref={ref} {...props} loading={loading || isLoading} onClick={callback}>
+    <Button ref={ref} {...props} className={classnames(className, !props.icon && loadingKeepSizeClassName)} loading={loading || isLoading} onClick={callback}>
       {typeof children === 'function' ? children(loading || isLoading) : children}
     </Button>
   );

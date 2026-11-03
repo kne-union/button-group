@@ -1,9 +1,10 @@
-import React, { useMemo, Fragment } from 'react';
+import React, { useMemo, useState, Fragment } from 'react';
 import { DownOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Space, Tooltip } from 'antd';
+import { Button, Drawer, Dropdown, Space, Tooltip } from 'antd';
 import classnames from 'classnames';
 import pick from 'lodash/pick';
 import OverflowItems, { useOverflowItems } from '@kne/overflow-items';
+import { MOBILE_POPUP_COVER, useMobilePopupMount } from '@kne/responsive-utils';
 import LoadingButton from '../LoadingButton';
 import ConfirmButton from '../ConfirmButton';
 import style from './style.module.scss';
@@ -61,6 +62,8 @@ const ButtonGroup = createWithIntlProvider(
   const { vertical: placeVertical, horizontal: placeHorizontal } = resolvePlace(place);
   const gap = resolveGap(spaceProps, compact);
   const shareItems = useMemo(() => toShareItems(list), [list]);
+  const [actionSheetOpen, setActionSheetOpen] = useState(false);
+  const { isMobile, fixedModeClass, getPopupContainer: getMobilePopupContainer, anchorRef } = useMobilePopupMount({ cover: MOBILE_POPUP_COVER.viewport });
 
   const moreButtonSize = useMemo(() => {
     for (const item of list) {
@@ -152,7 +155,7 @@ const ButtonGroup = createWithIntlProvider(
   const { align: spaceAlign, ...restSpaceProps } = spaceProps;
 
   return (
-    <div className={classnames(style['button-group'], { [style['is-ready']]: ready, [style['is-fixed']]: isControlled, [style['is-placed']]: !!place }, className)}>
+    <div ref={anchorRef} className={classnames(style['button-group'], { [style['is-ready']]: ready, [style['is-fixed']]: isControlled, [style['is-placed']]: !!place }, className)}>
       {shouldMeasure ? (
         <div ref={setMeasureRef} className={style['hidden-container']} aria-hidden style={{ gap }}>
           {list.map((item, index) => (
@@ -170,7 +173,12 @@ const ButtonGroup = createWithIntlProvider(
           {list.slice(0, visibleLength).map((item, index) => (
             <Fragment key={index}>{renderButton(item, index, false)}</Fragment>
           ))}
-          {ready && otherList.length > 0 && (
+          {ready && otherList.length > 0 && isMobile && (
+            <span className={style['more-trigger']} onClick={() => setActionSheetOpen(true)}>
+              {renderMoreButton()}
+            </span>
+          )}
+          {ready && otherList.length > 0 && !isMobile && (
             <Dropdown
               getPopupContainer={getPopupContainer}
               trigger={trigger}
@@ -190,6 +198,28 @@ const ButtonGroup = createWithIntlProvider(
           )}
         </SpaceComponent>
       </div>
+      {isMobile && otherList.length > 0 && (
+        <Drawer
+          open={actionSheetOpen}
+          placement="bottom"
+          height="auto"
+          closable={false}
+          getContainer={getMobilePopupContainer}
+          rootClassName={classnames(style['action-sheet'], fixedModeClass, menuClassName)}
+          onClose={() => setActionSheetOpen(false)}
+        >
+          <div className={style['action-sheet-list']}>
+            {otherList.map((item, index) => (
+              <div key={index} className={style['action-sheet-item']} onClick={() => setActionSheetOpen(false)}>
+                {renderButton(item, index, true)}
+              </div>
+            ))}
+          </div>
+          <Button className={style['action-sheet-cancel']} block onClick={() => setActionSheetOpen(false)}>
+            {formatMessage({ id: 'cancel' })}
+          </Button>
+        </Drawer>
+      )}
     </div>
   );
 });

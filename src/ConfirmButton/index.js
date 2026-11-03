@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Popconfirm, Modal, Button, Flex, Typography } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
-import { useLoading } from '../LoadingButton';
+import { useLoading, loadingKeepSizeClassName } from '../LoadingButton';
 import classnames from 'classnames';
 import useRefCallback from '@kne/use-ref-callback';
+import { MOBILE_POPUP_COVER, useMobilePopupMount } from '@kne/responsive-utils';
 import style from './style.module.scss';
 import { createWithIntlProvider, useIntl } from '@kne/react-intl';
 import zhCn from '../locale/zh-CN';
@@ -18,6 +19,7 @@ const ConfirmButton = createWithIntlProvider(
 
   const [open, setOpen] = useState(false);
   const { isLoading, callback } = useLoading(onClick);
+  const { isMobile, fixedModeClass, getPopupContainer } = useMobilePopupMount({ cover: MOBILE_POPUP_COVER.boundary });
 
   const handlerConfirm = useRefCallback(() => {
     setOpen(true);
@@ -62,6 +64,7 @@ const ConfirmButton = createWithIntlProvider(
     return (
       <Button
         {...props}
+        className={classnames(props.className, !props.icon && loadingKeepSizeClassName)}
         loading={isLoading}
         onClick={() => {
           handlerConfirm();
@@ -72,7 +75,7 @@ const ConfirmButton = createWithIntlProvider(
     );
   };
 
-  if (isModal) {
+  if (isModal || isMobile) {
     const modalProps = {
       open,
       onCancel: () => {
@@ -80,6 +83,7 @@ const ConfirmButton = createWithIntlProvider(
         onCancel && onCancel();
       },
       classNames: { wrapper: style['modal'] },
+      ...(isMobile ? { centered: true, rootClassName: classnames(style['mobile-modal'], fixedModeClass) } : {}),
       okText: okText ? okText : isDelete ? formatMessage({ id: 'delete' }) : formatMessage({ id: 'confirm' }),
       cancelText: cancelText || formatMessage({ id: 'cancel' }),
       onOk: e => {
@@ -90,7 +94,7 @@ const ConfirmButton = createWithIntlProvider(
       okButtonProps: {
         danger: isDelete
       },
-      getContainer,
+      getContainer: getContainer ?? (isMobile ? getPopupContainer : undefined),
       children: confirmContent
     };
     return (
