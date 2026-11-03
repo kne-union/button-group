@@ -1,0 +1,27 @@
+// loading 时图标叠在按钮中央、内容仅隐藏，保持按钮原尺寸
+.keep-size {
+  &:global(.ant-btn-loading) {
+    position: relative;
+
+    > :global(.ant-btn-loading-icon) {
+      position: absolute;
+      inset: 0;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      width: auto !important;
+      margin: 0 !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    > :not(:global(.ant-btn-loading-icon)) {
+      visibility: hidden;
+    }
+  }
+
+  // loading 结束后 antd 仍会播放图标的宽度退出动画，直接隐藏避免按钮被撑宽
+  &:not(:global(.ant-btn-loading)) > :global(.ant-btn-loading-icon) {
+    display: none !important;
+  }
+}

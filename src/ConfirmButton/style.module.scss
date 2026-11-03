@@ -36,6 +36,23 @@
   }
 }
 
+.mobile-modal {
+  :global {
+    .ant-modal {
+      max-width: calc(100% - 48px);
+    }
+  }
+
+  &:global(.kne-is-boundary) {
+    :global {
+      .ant-modal-mask,
+      .ant-modal-wrap {
+        position: absolute !important;
+      }
+    }
+  }
+}
+
 .confirm-content {
   .title {
     color: #222222;
