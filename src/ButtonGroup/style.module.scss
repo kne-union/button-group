@@ -90,16 +90,25 @@
   height: 100%;
 }
 
+// 尺寸开放为 CSS 变量：使用方在祖先上覆盖变量即可调整，无需再写 !important
 .more-link-btn {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding-inline: 8px !important;
+  padding-inline: var(--button-group-more-padding-inline, 8px) !important;
   padding-block: 0 !important;
   line-height: 1.571 !important;
   width: auto !important;
-  height: 100% !important;
-  min-width: 0 !important;
+  height: var(--button-group-more-height, 100%) !important;
+  min-width: var(--button-group-more-min-width, 0) !important;
+}
+
+.more-link-icon {
+  font-size: var(--button-group-more-icon-size, 16px);
+
+  &.is-small {
+    font-size: var(--button-group-more-icon-size, 14px);
+  }
 }
 
 .action-sheet {
