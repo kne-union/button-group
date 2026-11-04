@@ -142,7 +142,7 @@ const ButtonGroup = createWithIntlProvider(
     (moreType === 'link' ? (
       // 不用 icon 属性，避免 ant-btn-icon-only 固定方形尺寸导致相对文字 link 偏上
       <Button type="link" size={moreButtonSize} className={classnames('button-group-item', itemClassName, style['more-link-btn'])}>
-        <EllipsisOutlined style={{ fontSize: moreButtonSize === 'small' ? 14 : 16 }} />
+        <EllipsisOutlined className={classnames(style['more-link-icon'], { [style['is-small']]: moreButtonSize === 'small' })} />
       </Button>
     ) : (
       <Button size={moreButtonSize}>
